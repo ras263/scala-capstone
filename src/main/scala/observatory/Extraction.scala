@@ -22,24 +22,10 @@ object Extraction {
 
   lazy val sparkContext: SparkContext = sparkInit()
 
-  /* Not sure about such implementation. Leave here just as note. Need to be changed. */
-  lazy val stations: RDD[Station] = sparkContext.textFile("src/main/resources/stations.csv").map(
-    (line) => {
-      val lineParts = line.split(",")
-      if (lineParts(3).isEmpty || lineParts(4).isEmpty) {
-        NotFoundStation()
-      } else {
-        Station(lineParts(1), lineParts(2), Location(lineParts(3).toDouble, lineParts(4).toDouble))
-      }
-    }
-  ).filter(!_.isInstanceOf[NotFoundStation]).persist()
-
   case class Station(stn: String, wban: String = "", location: Location)
-  case class NotFoundStation() extends Station("", "", Location(200, 200))
-
   case class TemperatureData(stn: String, wban: String = "", month: Int, day: Int, temperature: Temperature)
 
-  def linesList(year: Year) = Source.fromInputStream(getClass.getResourceAsStream("/" + year + ".csv")).getLines()
+  //def linesList(year: Year) = Source.fromInputStream(getClass.getResourceAsStream("/" + year + ".csv")).getLines()
 
   /**
     * @param year             Year number
@@ -59,10 +45,10 @@ object Extraction {
     /* First */
     val stations = sparkContext.textFile(filePath + stationsFile)
       .map(_.split(","))
-      .filter((ar) => ar.length == 4 && ar(3).nonEmpty && ar(4).nonEmpty)
+      .filter((ar) => ar.length == 4 && ar(2).nonEmpty && ar(3).nonEmpty)
       .map(
         (ar) =>
-          (ar(1), ar(2)) -> Station(ar(1), ar(2), Location(ar(3).toDouble, ar(4).toDouble))
+          (ar(0), ar(1)) -> Station(ar(0), ar(1), Location(ar(2).toDouble, ar(3).toDouble))
       )
 
     /* Second */
@@ -71,13 +57,13 @@ object Extraction {
       .filter((ar) => ar.length == 5)
       .map(
         (td) =>
-          (td(1), td(2)) -> TemperatureData(td(1), td(2), td(3).toInt, td(4).toInt, td(5).toDouble)
+          (td(0), td(1)) -> TemperatureData(td(0), td(1), td(2).toInt, td(3).toInt, td(4).toDouble)
       )
 
     /* Third */
     stations.join(temperatures).values.map{
       case (station, temperatureData) =>
-        (new LocalDate(year, temperatureData.month, temperatureData.day), station.location, temperatureData.temperature)
+        (LocalDate.of(year, temperatureData.month, temperatureData.day), station.location, temperatureData.temperature)
     }.collect()
   }
 
@@ -93,7 +79,22 @@ object Extraction {
   def sparkAverageRecords(
                            records: RDD[(LocalDate, Location, Temperature)]
                          ): RDD[(Location, Temperature)] = {
-    ??? // actual work done here
+    /*
+    * Average temperatures for each location.
+    * 1) Group elements by location.
+    * 2) Prepare pairs by deleting dates and location from value.
+    * 3) Compute average of temperatures.
+    * */
+
+    /* First */
+    val grouped = records.groupBy(_._2)
+    /* Second and third */
+    grouped.mapValues(
+      (seq) => {
+        val size = seq.size
+        seq.map(_._3).sum / size
+      }
+    )
   }
 
 }
