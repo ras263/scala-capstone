@@ -48,14 +48,6 @@ object Extraction {
     * @return A sequence containing triplets (date, location, temperature)
     */
   def locateTemperatures(year: Year, stationsFile: String, temperaturesFile: String): Iterable[(LocalDate, Location, Temperature)] = {
-    // Another slightly strange implementation. Wrong temp lines should be filtered out at first and mapped to result structure then.
-    sparkContext.textFile(s"src/main/resources/$year.csv").map(
-      (line) => {
-        val td = line.split(",")
-        TemperatureData(td(1), td(2), td(3).toInt, td(4).toInt, td(5).toDouble)
-      }
-    )
-
     /*
      *
      * 1) Parse stations. Extract stn and wban pair as a key.
@@ -63,6 +55,30 @@ object Extraction {
      * 3) Join stations with temperatures by key.
      *
      */
+    val filePath: String = "src/main/resources"
+    /* First */
+    val stations = sparkContext.textFile(filePath + stationsFile)
+      .map(_.split(","))
+      .filter((ar) => ar.length == 4 && ar(3).nonEmpty && ar(4).nonEmpty)
+      .map(
+        (ar) =>
+          (ar(1), ar(2)) -> Station(ar(1), ar(2), Location(ar(3).toDouble, ar(4).toDouble))
+      )
+
+    /* Second */
+    val temperatures = sparkContext.textFile(filePath + temperaturesFile)
+      .map(_.split(","))
+      .filter((ar) => ar.length == 5)
+      .map(
+        (td) =>
+          (td(1), td(2)) -> TemperatureData(td(1), td(2), td(3).toInt, td(4).toInt, td(5).toDouble)
+      )
+
+    /* Third */
+    stations.join(temperatures).values.map{
+      case (station, temperatureData) =>
+        (new LocalDate(year, temperatureData.month, temperatureData.day), station.location, temperatureData.temperature)
+    }.collect()
   }
 
   /**
