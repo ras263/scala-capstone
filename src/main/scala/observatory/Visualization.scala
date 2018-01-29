@@ -41,8 +41,41 @@ object Visualization {
     *  if Temperature equal 12.0 then Color could be equal Color(255 255 0)
     *
     * */
-    val filteredPoints =  points.filter((point) => point._1 == value)
-    if (filteredPoints.size == 1) return filteredPoints.toList.head._2 else ???
+
+    def findClosestColors(points: Iterable[(Temperature, Color)]): ((Temperature, Color), (Temperature, Color)) = {
+      val sortedPoints = points.toList.sortWith(_._1 < _._1)
+      val smaller = sortedPoints.filter(_._1 <= value).last
+      val bigger = sortedPoints.filter(_._1 >= value).head
+      (smaller, bigger)
+    }
+
+    def interpolateColorIn(colderColor: (Temperature, Color), warmerColor: (Temperature, Color), value: Temperature): Color = {
+      val r = interpolate(colderColor._2.red, warmerColor._2.red, colderColor._1, warmerColor._1, value).toInt
+      val g = interpolate(colderColor._2.green, warmerColor._2.green, colderColor._1, warmerColor._1, value).toInt
+      val b = interpolate(colderColor._2.blue, warmerColor._2.blue, colderColor._1, warmerColor._1, value).toInt
+      Color(r, g, b)
+    }
+
+    /**
+      * Compute a linear interpolation between two specific color values.
+      * @param y0 Smaller color value.
+      * @param y1 Bigger color value.
+      * @param x0 Smaller temperature.
+      * @param x1 Bigger temperature.
+      * @param x Specific temperature.
+      * @return
+      */
+    def interpolate(y0: Int, y1: Int, x0: Double, x1: Double, x: Double): Double = {
+      y0 * (1 - ((x - x0) / (x1 - x0))) + y1 * ((x - x0) / (x1 - x0))
+    }
+
+    val filteredPoints =  points.filter(_._1 == value)
+    if (filteredPoints.size == 1)
+      filteredPoints.toList.head._2
+    else {
+      val (colder, warmer) = findClosestColors(points)
+      interpolateColorIn(colder, warmer, value)
+    }
   }
 
   /**
