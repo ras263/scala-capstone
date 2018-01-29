@@ -23,7 +23,7 @@ object Visualization {
     */
   def interpolateColor(points: Iterable[(Temperature, Color)], value: Temperature): Color = {
     /*
-    * 1) Find closest color.
+    * 1) Find two closest colors.
     * 2) Interpolate temperature to color.
     *
     *
@@ -41,7 +41,8 @@ object Visualization {
     *  if Temperature equal 12.0 then Color could be equal Color(255 255 0)
     *
     * */
-
+    val filteredPoints =  points.filter((point) => point._1 == value)
+    if (filteredPoints.size == 1) return filteredPoints.toList.head._2 else ???
   }
 
   /**
