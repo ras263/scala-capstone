@@ -38,7 +38,8 @@ object Extraction {
      *
      * 1) Parse stations. Extract stn and wban pair as a key.
      * 2) Parse temperatures of single year. Extract stn and wban pair as a key.
-     * 3) Join stations with temperatures by key.
+     * 3) Compute celsius from fahrenheit.
+     * 4) Join stations with temperatures by key.
      *
      */
     val filePath: String = "src/main/resources"
@@ -51,20 +52,27 @@ object Extraction {
           (ar(0), ar(1)) -> Station(ar(0), ar(1), Location(ar(2).toDouble, ar(3).toDouble))
       )
 
-    /* Second */
+    /* Second and third */
     val temperatures = sparkContext.textFile(filePath + temperaturesFile)
       .map(_.split(","))
       .filter((ar) => ar.length == 5)
       .map(
         (td) =>
-          (td(0), td(1)) -> TemperatureData(td(0), td(1), td(2).toInt, td(3).toInt, td(4).toDouble)
+          (td(0), td(1)) -> TemperatureData(
+            td(0),
+            td(1),
+            td(2).toInt,
+            td(3).toInt,
+            //(td(4).toDouble - 32) / 1.8 // without rounding
+            math.round(((td(4).toDouble - 32) / 1.8) * 100.0) / 100.0 // with rounding
+          )
       )
 
-    /* Third */
+    /* Fourth */
     stations.join(temperatures).values.map{
       case (station, temperatureData) =>
         (LocalDate.of(year, temperatureData.month, temperatureData.day), station.location, temperatureData.temperature)
-    }.collect()
+    }.collect().toSeq
   }
 
   /**
@@ -72,7 +80,7 @@ object Extraction {
     * @return A sequence containing, for each location, the average temperature over the year.
     */
   def locationYearlyAverageRecords(records: Iterable[(LocalDate, Location, Temperature)]): Iterable[(Location, Temperature)] = {
-    sparkAverageRecords(sparkContext.parallelize(records.toSeq)).collect().toSeq
+    sparkAverageRecords(sparkContext.parallelize(records.toSeq)).collect().toSeq.reverse
   }
 
   // Added method:
