@@ -84,7 +84,30 @@ object Visualization {
     * @return A 360×180 image where each pixel shows the predicted temperature at its location
     */
   def visualize(temperatures: Iterable[(Location, Temperature)], colors: Iterable[(Temperature, Color)]): Image = {
-    ???
+    /*
+    * For each coordinate (x, y):
+    * 1) Compute average temperature using .predictTemperature() method.
+    * 2) Choose color by computed temperature using .interpolateColor() method.
+    * For all:
+    * 1) Collect all pixels' colors and create image (360x180).
+    * */
+    val rows = 180
+    val columns = 360
+    val pixelsArray = Array.ofDim[Pixel](rows * columns)
+
+    for {
+      i <- 0 to 359
+      j <- 0 to 179
+    } yield {
+      val location = Location(i, j)
+      /* First */
+      val temperature = predictTemperature(temperatures, location)
+      /* Second */
+      val color = interpolateColor(colors, temperature)
+      /* Create pixel and set it to result array */
+      pixelsArray((i * columns) + j) = Pixel.apply(color.red, color.green, color.blue, 1)
+    }
+    Image(columns, rows, pixelsArray)
   }
 
 }
