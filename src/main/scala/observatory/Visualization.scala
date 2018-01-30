@@ -13,7 +13,65 @@ object Visualization {
     * @return The predicted temperature at `location`
     */
   def predictTemperature(temperatures: Iterable[(Location, Temperature)], location: Location): Temperature = {
-    ???
+
+    /**
+      * Power parameter. May been equals 2 or bigger.
+      */
+    val p = 2
+
+    /**
+      * Great circle distance.
+      * @param from First point.
+      * @param to Second point.
+      * @return Distance in kilometers.
+      */
+    def distance(from: Location, to: Location): Double = {
+
+      def computeSigma(): Double = {
+        import math.{abs, acos, sin, cos, toRadians}
+        if (from.lat == to.lat && from.lon == to.lon) {
+          0
+        } else if (abs(from.lat) - abs(to.lat) == 0 && abs(from.lon) - abs(to.lon) == 0) {
+          math.Pi
+        } else {
+          acos(
+            (sin(toRadians(from.lat)) * sin(toRadians(to.lat)))
+              + (cos(toRadians(from.lat)) * cos(toRadians(to.lat)) * cos(toRadians(abs(from.lon - to.lon))))
+          )
+        }
+      }
+
+      val sigma = computeSigma()
+      val earthRadius = 6371
+
+      earthRadius * sigma
+    }
+
+    /**
+      * Compute inverse distance weighting by applying Shepard's method.
+      * @return Interpolated value of temperature at the specific location.
+      */
+    def shepardsMethod(): Double = {
+
+      def weight(d: Double): Double = {
+        1 / math.pow(d, p)
+      }
+
+      val ft = temperatures.filter(_._1 == location)
+      if (ft.size == 1) ft.head._2 else {
+        val sums = temperatures.map{
+          case (l, t) =>
+            val w = weight(distance(location, l))
+            (w * t, w)
+        }.reduce(
+          (first, second) => (first._1 + second._1, first._2 + second._2)
+        )
+        sums._1 / sums._2
+      }
+
+    }
+
+    shepardsMethod()
   }
 
   /**
@@ -96,10 +154,10 @@ object Visualization {
     val pixelsArray = Array.ofDim[Pixel](rows * columns)
 
     for {
-      i <- 0 to 359
-      j <- 0 to 179
+      i <- 0 to rows
+      j <- 0 to columns
     } yield {
-      val location = Location(i, j)
+      val location = Location(90 - i, j - 180)
       /* First */
       val temperature = predictTemperature(temperatures, location)
       /* Second */

@@ -31,5 +31,9 @@ trait VisualizationTest extends FunSuite with Checkers {
     assert(result === expected)
   }
 
+  test("predictTemperature test") {
+
+  }
+
 
 }
