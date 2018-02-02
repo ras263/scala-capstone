@@ -148,13 +148,11 @@ object Visualization {
       * @return Two closest colors.
       */
     def findClosestColors(points: Iterable[(Temperature, Color)]): ((Temperature, Color), (Temperature, Color)) = {
-      try {
-        val colder = points.filter(_._1 <= value).last
-        val warmer = points.filter(_._1 >= value).head
-        (colder, warmer)
-      } catch {
-        case exp: Exception => println(points); println(value); throw exp
-      }
+      val colders = points.filter(_._1 <= value)
+      val warmers = points.filter(_._1 >= value)
+      if (colders.nonEmpty && warmers.nonEmpty) (colders.last, warmers.head)
+      else if (warmers.nonEmpty && colders.isEmpty) (warmers.head, warmers.head)
+      else (colders.last, colders.last)
     }
 
     def interpolateColorIn(colderColor: (Temperature, Color), warmerColor: (Temperature, Color), value: Temperature): Color = {
