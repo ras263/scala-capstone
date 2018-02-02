@@ -1,4 +1,7 @@
+import observatory.{Location, Visualization}
+
 import scala.collection.immutable
+import scala.math._
 
 
 object test {
@@ -12,6 +15,50 @@ object test {
     (i, j)
   }
   //test1.foreach(println(_))
+
+  val earthRadius = 6137
+
+  val loc1 = Location(12, 45)
+  val loc2 = Location(26, 46)
+
+  val dist = distance(loc1, loc2)
+  val dist1 = distance(loc2, loc1)
+  val dist2 = distance2(loc1, loc2)
+
+
+  def distance(from: Location, to: Location): Double = {
+
+    def computeSigma(): Double = {
+      if (from.lat == to.lat && from.lon == to.lon) {
+        0
+      } else if (from.lat == -to.lat && from.lon == -(180 - to.lon)) {
+        math.Pi
+      } else {
+        //val dLambla =
+        val in = sin(toRadians(from.lat)) * sin(toRadians(to.lat))
+        + (cos(toRadians(from.lat)) * cos(toRadians(to.lat)) * cos(abs(toRadians(from.lon) - toRadians(to.lon))))
+        if (abs(in) <= 1.0) acos(in) else acos(1.0)
+      }
+    }
+
+    val sigma = computeSigma()
+
+    earthRadius * sigma
+  }
+
+  def distance2(locA: Location, locB: Location): Double = {
+    val Location(latA, lonA) = locA
+    val Location(latB, lonB) = locB
+    val latDistance = toRadians(latB - latA)
+    val lonDistance = toRadians(lonB - lonA)
+
+    val a = pow(sin(latDistance / 2), 2) +
+      cos(toRadians(latA)) * cos(toRadians(latB)) *
+        pow(sin(lonDistance / 2), 2)
+
+    val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    c * 6371
+  }
 
 
 }

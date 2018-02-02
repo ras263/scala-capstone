@@ -14,17 +14,19 @@ trait VisualizationTest extends FunSuite with Checkers {
   }
 
   test("interpolateColor test") {
+    val points: List[(Temperature, Color)] = List(
+      (60, Color(255, 255, 255)),
+      (32, Color(255, 0, 0)),
+      (12, Color(255, 255, 0)),
+      (0, Color(0, 255, 255)),
+      (-15, Color(0, 0, 255)),
+      (-27, Color(255, 0, 255)),
+      (-50, Color(33, 0, 107)),
+      (-60, Color(0, 0, 0))
+    )
+    val sortedPoints = points.sortWith(_._1 < _._1)
     val result = Visualization.interpolateColor(
-      List(
-          (60, Color(255, 255, 255)),
-          (32, Color(255, 0, 0)),
-          (12, Color(255, 255, 0)),
-          (0, Color(0, 255, 255)),
-          (-15, Color(0, 0, 255)),
-          (-27, Color(255, 0, 255)),
-          (-50, Color(33, 0, 107)),
-          (-60, Color(0, 0, 0))
-      ),
+      sortedPoints,
       40.0
     )
     val expected = Color(255, 72, 72)
@@ -32,7 +34,9 @@ trait VisualizationTest extends FunSuite with Checkers {
   }
 
   test("predictTemperature test") {
-
+    val data = Extraction.locationYearlyAverageRecords(Extraction.locateTemperatures(2015, "/test_stations.csv", "/1900.csv"))
+    val result = Visualization.predictTemperature(data, Location(37, -78))
+    result
   }
 
 
