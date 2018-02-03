@@ -77,43 +77,22 @@ object Visualization {
         1 / math.pow(d, p)
       }
 
-      /*val ft = temperatures.filter(
-        (lt) => {
-          abs(lt._1.lat - location.lat) <= 50 &&
-            abs(lt._1.lon - location.lon) <= 50
-        }
-      )*/
       val et = temperatures.filter(_._1 == location)
-      if (temperatures.size == 1) et.head._2 else {
+      if (et.size == 1) et.head._2 else {
         val sums = temperatures.map{
           case (l, t) =>
             val dist = distance(location, l)
             if (dist < 1) return t
             val w = weight(dist)
-            if (dist < earthRadius) (w * t, w) else (0.0, 0.0)
+            (w * t, w)
         }.reduce(
           (first, second) => (first._1 + second._1, first._2 + second._2)
         )
-        if (sums._2 == 0) -60 else sums._1 / sums._2
+        sums._1 / sums._2
       }
-
-
-      // With closest
-
-    }
-
-    def modifiedShepardsMethod(): Temperature = {
-      temperatures.map(
-        (lt) => {
-          val dist = distance(lt._1, location)
-          if (dist < 1) return lt._2
-          math.pow(math.max(0.0, earthRadius - dist) / (earthRadius * dist), 2)
-        }
-      ).sum
     }
 
     shepardsMethod()
-    //modifiedShepardsMethod()
   }
 
   /**
@@ -122,25 +101,6 @@ object Visualization {
     * @return The color that corresponds to `value`, according to the color scale defined by `points`
     */
   def interpolateColor(points: Iterable[(Temperature, Color)], value: Temperature): Color = {
-    /*
-    * 1) Find two closest colors.
-    * 2) Interpolate temperature to color.
-    *
-    *
-    *  // Imprecise method, which does not guarantee v = v1 when t = 1, due to floating-point arithmetic error.
-    *  // This form may be used when the hardware has a native fused multiply-add instruction.
-    * float lerp(float v0, float v1, float t) {
-    *    return v0 + t * (v1 - v0);
-    *  }
-    *
-    *  // Precise method, which guarantees v = v1 when t = 1.
-    *  float lerp(float v0, float v1, float t) {
-    *    return (1 - t) * v0 + t * v1;
-    *  }
-    *
-    *  if Temperature equal 12.0 then Color could be equal Color(255 255 0)
-    *
-    * */
 
     /**
       * Points must be sorted by temperature in ascending order.
@@ -155,25 +115,17 @@ object Visualization {
       else sortedPoints.zip(sortedPoints.tail).filter{
           case ((t1, c1), (t2, c2)) => temperature >= t1 && temperature <= t2
         }.head
-
-
-
-
-      /*val colders = points.filter(_._1 <= value)
-      val warmers = points.filter(_._1 >= value)
-      if (warmers.nonEmpty && colders.isEmpty) (warmers.head, warmers.head)
-      else if (colders.nonEmpty && warmers.isEmpty) (colders.last, colders.last)
-      else (colders.last, warmers.head)*/
     }
 
     def interpolateColorIn(colderColor: (Temperature, Color), warmerColor: (Temperature, Color), value: Temperature): Color = {
-      if (colderColor._2 == warmerColor._2) return warmerColor._2
-      val (t1, Color(r1, g1, b1)) = colderColor
-      val (t2, Color(r2, g2, b2)) = warmerColor
-      val r = interpolate(r1, r2, t1, t2, value).round.toInt
-      val g = interpolate(g1, g2, t1, t2, value).round.toInt
-      val b = interpolate(b1, b2, t1, t2, value).round.toInt
-      Color(r, g, b)
+      if (colderColor._2 == warmerColor._2) warmerColor._2 else {
+        val (t1, Color(r1, g1, b1)) = colderColor
+        val (t2, Color(r2, g2, b2)) = warmerColor
+        val r = interpolate(r1, r2, t1, t2, value).round.toInt
+        val g = interpolate(g1, g2, t1, t2, value).round.toInt
+        val b = interpolate(b1, b2, t1, t2, value).round.toInt
+        Color(r, g, b)
+      }
     }
 
     /**
@@ -226,17 +178,15 @@ object Visualization {
       j <- 0 until columns
     } yield {
       val location = Location(90 - i, j - 180)
-      /*if (i == 102 && j == 265) {
-        println("Here you are!")
-      }*/
       /* First */
       val temperature = predictTemperature(temperatures, location)
       /* Second */
       val color = interpolateColor(colours, temperature)
       /* Create pixel and set it to result array */
       pixelsArray((i * columns) + j) = Pixel.apply(color.red, color.green, color.blue, 255)
+
       //todo Remove after testing.
-      if (j == columns - 1) println(s"Row $i completed.")
+      //if (j == columns - 1) println(s"Row $i completed.")
       //println(s"Column $j completed.")
     }
     val image = Image(columns, rows, pixelsArray)
