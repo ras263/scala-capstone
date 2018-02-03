@@ -17,6 +17,7 @@ object Main extends App {
         (-60.0, Color(0, 0, 0))
     )
 
+    val sortedPoints = colors.sortWith(_._1 < _._1)
 
     val visRes = Visualization.visualize(dataExtRes, colors)
     //dataExtRes.foreach(println(_))

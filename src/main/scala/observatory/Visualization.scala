@@ -144,18 +144,30 @@ object Visualization {
 
     /**
       * Points must be sorted by temperature in ascending order.
-      * @param points Sorted color points.
+      * @param sortedPoints Sorted color points.
       * @return Two closest colors.
       */
-    def findClosestColors(points: Iterable[(Temperature, Color)]): ((Temperature, Color), (Temperature, Color)) = {
-      val colders = points.filter(_._1 <= value)
+    def findTwoClosestFromAscendingOrderedPoints(sortedPoints: Iterable[(Temperature, Color)], temperature: Temperature): ((Temperature, Color), (Temperature, Color)) = {
+      val warmest = sortedPoints.last
+      val coolest = sortedPoints.head
+      if (warmest._1 <= temperature) (warmest, warmest)
+      else if (coolest._1 >= temperature) (coolest, coolest)
+      else sortedPoints.zip(sortedPoints.tail).filter{
+          case ((t1, c1), (t2, c2)) => temperature >= t1 && temperature <= t2
+        }.head
+
+
+
+
+      /*val colders = points.filter(_._1 <= value)
       val warmers = points.filter(_._1 >= value)
-      if (colders.nonEmpty && warmers.nonEmpty) (colders.last, warmers.head)
-      else if (warmers.nonEmpty && colders.isEmpty) (warmers.head, warmers.head)
-      else (colders.last, colders.last)
+      if (warmers.nonEmpty && colders.isEmpty) (warmers.head, warmers.head)
+      else if (colders.nonEmpty && warmers.isEmpty) (colders.last, colders.last)
+      else (colders.last, warmers.head)*/
     }
 
     def interpolateColorIn(colderColor: (Temperature, Color), warmerColor: (Temperature, Color), value: Temperature): Color = {
+      if (colderColor._2 == warmerColor._2) return warmerColor._2
       val (t1, Color(r1, g1, b1)) = colderColor
       val (t2, Color(r2, g2, b2)) = warmerColor
       val r = interpolate(r1, r2, t1, t2, value).round.toInt
@@ -174,15 +186,15 @@ object Visualization {
       * @return
       */
     def interpolate(y0: Int, y1: Int, x0: Double, x1: Double, x: Double): Double = {
-      //y0 * (1 - ((x - x0) / (x1 - x0))) + y1 * ((x - x0) / (x1 - x0))
-      y0 + ((x - x0) * ((y1 - y0) / (x1 - x0)))
+      y0 * (1 - ((x - x0) / (x1 - x0))) + y1 * ((x - x0) / (x1 - x0))
+      //y0 + ((x - x0) * ((y1 - y0) / (x1 - x0)))
     }
 
     val filteredPoints =  points.filter(_._1 == value)
     if (filteredPoints.size == 1)
       filteredPoints.toList.head._2
     else {
-      val (colder, warmer) = findClosestColors(points)
+      val (colder, warmer) = findTwoClosestFromAscendingOrderedPoints(points,  value)
       interpolateColorIn(colder, warmer, value)
     }
   }
