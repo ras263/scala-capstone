@@ -2,9 +2,9 @@ package observatory
 
 object Main extends App {
 
-    val dataExtRes = Extraction.locationYearlyAverageRecords(Extraction.locateTemperatures(1975, "/stations.csv", "/1975.csv"))
+    val dataExtRes = Extraction.locationYearlyAverageRecords(Extraction.locateTemperatures(1975, "src/main/resources/stations.csv", "src/main/resources/1975.csv"))
     //val prTempRes = Visualization.predictTemperature(dataExtRes, Location(37.354, -78.436))
-    val a = dataExtRes.toList.sortBy(_._2)
+    //val a = dataExtRes.toList.sortBy(_._2)
 
     val colors = List(
         (60.0, Color(255, 255, 255)),
@@ -17,9 +17,9 @@ object Main extends App {
         (-60.0, Color(0, 0, 0))
     )
 
-    val sortedPoints = colors.sortWith(_._1 < _._1)
+    //val sortedPoints = colors.sortWith(_._1 < _._1)
 
-    val visRes = Visualization.visualize(dataExtRes, colors)
+    //val visRes = Visualization.visualize(dataExtRes, colors)
     //dataExtRes.foreach(println(_))
     //println(prTempRes)
 

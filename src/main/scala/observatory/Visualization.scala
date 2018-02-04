@@ -118,7 +118,10 @@ object Visualization {
     }
 
     def interpolateColorIn(colderColor: (Temperature, Color), warmerColor: (Temperature, Color), value: Temperature): Color = {
-      if (colderColor._2 == warmerColor._2) warmerColor._2 else {
+      if (colderColor._2 == warmerColor._2) warmerColor._2
+      else if (colderColor._1 == value) colderColor._2
+      else if (warmerColor._1 == value) warmerColor._2
+      else {
         val (t1, Color(r1, g1, b1)) = colderColor
         val (t2, Color(r2, g2, b2)) = warmerColor
         val r = interpolate(r1, r2, t1, t2, value).round.toInt

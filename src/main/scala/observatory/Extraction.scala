@@ -25,8 +25,6 @@ object Extraction {
   case class Station(stn: String, wban: String = "", location: Location)
   case class TemperatureData(stn: String, wban: String = "", month: Int, day: Int, temperature: Temperature)
 
-  //def linesList(year: Year) = Source.fromInputStream(getClass.getResourceAsStream("/" + year + ".csv")).getLines()
-
   /**
     * @param year             Year number
     * @param stationsFile     Path of the stations resource file to use (e.g. "/stations.csv")
@@ -42,9 +40,12 @@ object Extraction {
      * 4) Join stations with temperatures by key.
      *
      */
-    val filePath: String = "src/main/resources"
+    //val filePath: String = "src/main/resources"
     /* First */
-    val stations = sparkContext.textFile(filePath + stationsFile)
+    //val stations = sparkContext.textFile(/*filePath + */stationsFile)
+    val stations = sparkContext.parallelize(
+      Source.fromInputStream(getClass.getResourceAsStream(stationsFile))
+        .getLines().toList)
       .map(_.split(","))
       .filter((ar) => ar.length == 4 && ar(2).nonEmpty && ar(3).nonEmpty)
       .map(
@@ -53,7 +54,10 @@ object Extraction {
       )
 
     /* Second and third */
-    val temperatures = sparkContext.textFile(filePath + temperaturesFile)
+    //val temperatures = sparkContext.textFile(/*filePath + */temperaturesFile)
+    val temperatures = sparkContext.parallelize(
+      Source.fromInputStream(getClass.getResourceAsStream(temperaturesFile))
+        .getLines().toList)
       .map(_.split(","))
       .filter((ar) => ar.length == 5)
       .map(
