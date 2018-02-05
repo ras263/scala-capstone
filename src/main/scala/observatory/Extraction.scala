@@ -40,7 +40,7 @@ object Extraction {
      * 4) Join stations with temperatures by key.
      *
      */
-§    /* First */
+    /* First */
     val stations = sparkContext.parallelize(
       Source.fromInputStream(getClass.getResourceAsStream(stationsFile))
         .getLines().toList)
