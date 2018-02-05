@@ -16,7 +16,7 @@ trait VisualizationTest extends FunSuite with Checkers {
     (-50, Color(33, 0, 107)),
     (-60, Color(0, 0, 0))
   )
-  val sortedPoints = points.sortWith(_._1 < _._1)
+  val sortedPoints: List[(Temperature, Color)] = points.sortWith(_._1 < _._1)
 
   test("interpolateColor with exact match test") {
     val result = Visualization.interpolateColor(List((12.0, Color(255, 255, 0))), 12.0)

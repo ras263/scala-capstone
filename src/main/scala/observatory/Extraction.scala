@@ -40,9 +40,7 @@ object Extraction {
      * 4) Join stations with temperatures by key.
      *
      */
-    //val filePath: String = "src/main/resources"
-    /* First */
-    //val stations = sparkContext.textFile(/*filePath + */stationsFile)
+§    /* First */
     val stations = sparkContext.parallelize(
       Source.fromInputStream(getClass.getResourceAsStream(stationsFile))
         .getLines().toList)
@@ -54,7 +52,6 @@ object Extraction {
       )
 
     /* Second and third */
-    //val temperatures = sparkContext.textFile(/*filePath + */temperaturesFile)
     val temperatures = sparkContext.parallelize(
       Source.fromInputStream(getClass.getResourceAsStream(temperaturesFile))
         .getLines().toList)

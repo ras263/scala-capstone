@@ -1,16 +1,16 @@
 ###First commit.
 
-    Test Description] [#1 - Data extraction] weather stations are identified by the composite (STN, WBAN)</br>
+    |OK|  Test Description] [#1 - Data extraction] weather stations are identified by the composite (STN, WBAN)</br>
     [Observed Error] Input path does not exist: file:/grader/repository/src/main/resources/stations2.csv</br>
     [exception was thrown] detailed error message in debug output section below</br>
     [Lost Points] 3
 
-    [Test Description] [#1 - Data extraction] temperatures are located</br>
+    |OK|  [Test Description] [#1 - Data extraction] temperatures are located</br>
     [Observed Error] Input path does not exist: file:/grader/repository/src/main/resources/stations1.csv</br>
     [exception was thrown] detailed error message in debug output section below</br>
     [Lost Points] 5
 
-    [Test Description] [#1 - Data extraction] stations with no location are ignored</br></br>
+    |OK|  [Test Description] [#1 - Data extraction] stations with no location are ignored</br></br>
     [Observed Error] Input path does not exist: file:/grader/repository/src/main/resources/empty-stations.csv</br>
     [exception was thrown] detailed error message in debug output section below</br>
     [Lost Points] 3
