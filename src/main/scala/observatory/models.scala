@@ -1,7 +1,10 @@
 package observatory
 
+import com.sksamuel.scrimage.Pixel
+
 /**
   * Introduced in Week 1. Represents a location on the globe.
+  *
   * @param lat Degrees of latitude, -90 ≤ lat ≤ 90
   * @param lon Degrees of longitude, -180 ≤ lon ≤ 180
   */
@@ -15,7 +18,15 @@ case class Location(lat: Double, lon: Double)
   * @param y Y coordinate of the tile
   * @param zoom Zoom level, 0 ≤ zoom ≤ 19
   */
-case class Tile(x: Int, y: Int, zoom: Int)
+case class Tile(x: Int, y: Int, zoom: Int) {
+  lazy val toLocation: Location = {
+    import math.{pow, atan, sinh, Pi}
+    val n = pow(2, zoom)
+    val lon = x / n * 360.0 - 180.0
+    val lat = atan(sinh(Pi * (1 - 2 * y / n))).toDegrees // π
+    Location(lat, lon)
+  }
+}
 
 /**
   * Introduced in Week 4. Represents a point on a grid composed of
@@ -38,5 +49,9 @@ case class CellPoint(x: Double, y: Double)
   * @param green Level of green, 0 ≤ green ≤ 255
   * @param blue Level of blue, 0 ≤ blue ≤ 255
   */
-case class Color(red: Int, green: Int, blue: Int)
+case class Color(red: Int, green: Int, blue: Int) {
+  def toPixel(alpha: Int): Pixel = {
+    Pixel.apply(red, green, blue, alpha)
+  }
+}
 

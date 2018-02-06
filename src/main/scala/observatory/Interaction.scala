@@ -7,17 +7,14 @@ import com.sksamuel.scrimage.{Image, Pixel}
   */
 object Interaction {
 
+  type Data = Iterable[(Location, Temperature)]
+
   /**
     * @param tile Tile coordinates
     * @return The latitude and longitude of the top-left corner of the tile, as per http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
     */
   def tileLocation(tile: Tile): Location = {
-    import math.{atan, sinh, Pi}
-    val n = 2 ^ tile.zoom
-    val lon = tile.x / n * 360.0 - 180.0
-    val lat_rad = atan(sinh(Pi * (1 - 2 * tile.y / n)))
-    val lat = lat_rad * 180.0 / Pi // π
-    Location(lat, lon)
+    tile.toLocation
   }
 
   /**
@@ -27,7 +24,24 @@ object Interaction {
     * @return A 256×256 image showing the contents of the given tile
     */
   def tile(temperatures: Iterable[(Location, Temperature)], colors: Iterable[(Temperature, Color)], tile: Tile): Image = {
-    ???
+    import Visualization._
+
+    val width, height = 256
+    val colours = colors.toList.sortWith(_._1 < _._1)
+
+    val pixels = (0 until width * height).par.map(
+      pos => {
+        val x = (pos % width).toDouble / width + tile.x
+        val y = (pos / height).toDouble / height + tile.y
+
+        pos -> interpolateColor(
+          colours,
+          predictTemperature(temperatures, Location(y, x))
+        ).toPixel(127)
+      }
+    ).toList.sortBy(_._1).map(_._2)
+
+    Image(width, height, pixels.toArray)
   }
 
   /**
@@ -41,7 +55,11 @@ object Interaction {
     yearlyData: Iterable[(Year, Data)],
     generateImage: (Year, Tile, Data) => Unit
   ): Unit = {
-    ???
+
+  }
+
+  def generateImage(year: Year, tile: Tile, data: Data): Unit = {
+
   }
 
 }
