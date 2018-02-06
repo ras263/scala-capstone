@@ -55,11 +55,14 @@ object Interaction {
     yearlyData: Iterable[(Year, Data)],
     generateImage: (Year, Tile, Data) => Unit
   ): Unit = {
-
-  }
-
-  def generateImage(year: Year, tile: Tile, data: Data): Unit = {
-
+    for {
+      (year, data) <- yearlyData
+      zoom <- 0 to 3
+      x <- 0 until math.pow(2, zoom)
+      y <- 0 until math.pow(2, zoom)
+    } {
+      generateImage(year, Tile(x, y, zoom), data)
+    }
   }
 
 }
