@@ -1,4 +1,4 @@
-###First commit.
+###First milestone.
 
     |OK|  Test Description] [#1 - Data extraction] weather stations are identified by the composite (STN, WBAN)</br>
     [Observed Error] Input path does not exist: file:/grader/repository/src/main/resources/stations2.csv</br>
@@ -16,7 +16,7 @@
     [Lost Points] 3
 
 
-###Second commit.
+###Second milestone.
 
     |OLD|  [Test Description] [#2 - Raw data display] visualize
     [Observed Error] NoSuchElementException was thrown during property evaluation.
@@ -61,3 +61,21 @@
         arg1 = -80.19246221066285
       )
     [Lost Points] 2
+    
+### Third milestone
+
+    |OK|  [Test Description] [#3 - Interactive visualization] tile pixel colors must be consistent with the given located temperatures and color scale
+    [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
+     (InteractionTest.scala:31)
+      Falsified after 0 successful property evaluations.
+      Location: (InteractionTest.scala:31)
+      Occurred when passed generated values (
+        arg0 = true
+      )
+      Label of failing property:
+        Incorrect computed color at Location(85.05112877980659,-180.0): Color(0,0,255). Expected to be closer to Color(255,0,0) than Color(0,0,255)
+    [Lost Points] 5
+    
+    [Test Description] [#3 - Interactive visualization] tile must be consistent across zoom levels
+    [Observed Error] 30.479501308256342 was not less than 30
+    [Lost Points] 3

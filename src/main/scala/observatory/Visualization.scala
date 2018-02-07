@@ -15,7 +15,7 @@ object Visualization {
     * @return The predicted temperature at `location`
     */
   def predictTemperature(temperatures: Iterable[(Location, Temperature)], location: Location): Temperature = {
-    import math.{abs, acos, sin, cos, toRadians}
+    import math.{sin, cos, toRadians}
     /**
       * Power parameter. May been equals 2 or bigger.
       */
@@ -29,24 +29,6 @@ object Visualization {
       * @return Distance in kilometers.
       */
     def distance(from: Location, to: Location): Double = {
-
-      /*def computeSigma(): Double = {
-        if (from.lat == to.lat && from.lon == to.lon) {
-          0
-        } else if (from.lat == -to.lat && from.lon == -(180 - to.lon)) {
-          math.Pi
-        } else {
-          val in = sin(toRadians(from.lat)) * sin(toRadians(to.lat))
-              + (cos(toRadians(from.lat)) * cos(toRadians(to.lat)) * cos(toRadians(abs(from.lon - to.lon))))
-          if (abs(in) <= 1.0) acos(in) else acos(1.0)
-        }
-      }
-
-      val sigma = computeSigma()
-
-      earthRadius * sigma*/
-
-
       val Location(latA, lonA) = from
       val Location(latB, lonB) = to
       val latDistance = toRadians(latB - latA)
@@ -186,14 +168,14 @@ object Visualization {
       /* Second */
       val color = interpolateColor(colours, temperature)
       /* Create pixel and set it to result array */
-      pixelsArray((i * columns) + j) = Pixel.apply(color.red, color.green, color.blue, 255)
+      pixelsArray((i * columns) + j) = Pixel.apply(color.red, color.green, color.blue, 127)
 
       //todo Remove after testing.
       //if (j == columns - 1) println(s"Row $i completed.")
       //println(s"Column $j completed.")
     }
     val image = Image(columns, rows, pixelsArray)
-    image.output(new java.io.File("target/some-image.png"))
+    //image.output(new java.io.File("target/some-image.png"))
     image
   }
 

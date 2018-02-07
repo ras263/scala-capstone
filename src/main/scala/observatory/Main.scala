@@ -5,7 +5,7 @@ package observatory
 object Main extends App {
 
     def firstSecond(): Unit = {
-        val dataExtRes = Extraction.locationYearlyAverageRecords(Extraction.locateTemperatures(1900, "/stations.csv", "/1900_test.csv"))
+        val dataExtRes = Extraction.locationYearlyAverageRecords(Extraction.locateTemperatures(1975, "/stations.csv", "/1975_test.csv"))
         //val prTempRes = Visualization.predictTemperature(dataExtRes, Location(37.354, -78.436))
         //val a = dataExtRes.toList.sortBy(_._2)
 
