@@ -7,7 +7,7 @@ import com.sksamuel.scrimage.{Image, Pixel}
   */
 object Interaction {
 
-  type Data = Iterable[(Location, Temperature)]
+  //type Data = Iterable[(Location, Temperature)]
 
   /**
     * @param tile Tile coordinates
@@ -18,10 +18,10 @@ object Interaction {
   }
 
   def toLocation(x: Double, y: Double, zoom: Int): Location = {
-    import math.{pow, atan, sinh, Pi}
+    import math.{pow, atan, sinh, Pi, toDegrees}
     val n = pow(2, zoom)
     val lon = x / n * 360.0 - 180.0
-    val lat = atan(sinh(Pi * (1 - 2 * y / n))).toDegrees // π
+    val lat = toDegrees(atan(sinh(Pi * (1 - 2 * y / n)))) // π
     Location(lat, lon)
   }
 
@@ -66,8 +66,8 @@ object Interaction {
     for {
       (year, data) <- yearlyData
       zoom <- 0 to 3
-      x <- 0 until math.pow(2, zoom).toInt
-      y <- 0 until math.pow(2, zoom).toInt
+      x <- 0 until 1 << zoom
+      y <- 0 until 1 << zoom
     } {
       generateImage(year, Tile(x, y, zoom), data)
     }

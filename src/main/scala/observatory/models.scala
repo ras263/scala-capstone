@@ -19,12 +19,8 @@ case class Location(lat: Double, lon: Double)
   * @param zoom Zoom level, 0 ≤ zoom ≤ 19
   */
 case class Tile(x: Int, y: Int, zoom: Int) {
-  lazy val toLocation: Location = {
-    import math.{pow, atan, sinh, Pi}
-    val n = pow(2, zoom)
-    val lon = x / n * 360.0 - 180.0
-    val lat = atan(sinh(Pi * (1 - 2 * y / n))).toDegrees // π
-    Location(lat, lon)
+  lazy val location: Location = {
+    Interaction.toLocation(x, y, zoom)
   }
 }
 

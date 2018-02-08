@@ -16,18 +16,10 @@ object Visualization {
     */
   def predictTemperature(temperatures: Iterable[(Location, Temperature)], location: Location): Temperature = {
     import math.{sin, cos, toRadians}
-    /**
-      * Power parameter. May been equals 2 or bigger.
-      */
+    /** Power parameter. May been equals 2 or bigger. */
     val p = 16
     val earthRadius = 6371
 
-    /**
-      * Great circle distance.
-      * @param from First point.
-      * @param to Second point.
-      * @return Distance in kilometers.
-      */
     def distance(from: Location, to: Location): Double = {
       val Location(latA, lonA) = from
       val Location(latB, lonB) = to
@@ -44,13 +36,6 @@ object Visualization {
 
     /**
       * Compute inverse distance weighting by applying Shepard's method.
-      *
-      * Note : However, running the inverse distance weighting algorithm with
-      * small distances will result in huge numbers (since we divide by the distance
-      * raised to the power of p), which can be a problem. A solution to this problem
-      * is to directly use the known temperature of the close (less than 1 km)
-      * location as a prediction.
-      *
       * @return Interpolated value of temperature at the specific location.
       */
     def shepardsMethod(): Double = {
@@ -85,7 +70,7 @@ object Visualization {
   def interpolateColor(points: Iterable[(Temperature, Color)], value: Temperature): Color = {
 
     /**
-      * Points must be sorted by temperature in ascending order.
+      * Note: Points must be sorted by temperature in ascending order.
       * @param sortedPoints Sorted color points.
       * @return Two closest colors.
       */
