@@ -11,7 +11,7 @@ object Manipulation {
     *         returns the predicted temperature at this location
     */
   def makeGrid(temperatures: Iterable[(Location, Temperature)]): GridLocation => Temperature = {
-    ???
+    ??? // Add restrictions
   }
 
   /**
@@ -20,7 +20,12 @@ object Manipulation {
     * @return A function that, given a latitude and a longitude, returns the average temperature at this location
     */
   def average(temperaturess: Iterable[Iterable[(Location, Temperature)]]): GridLocation => Temperature = {
-    ???
+    val temps = temperaturess.flatten.groupBy(_._1).mapValues(
+      (data) => {
+        data.map(_._2).sum / data.size
+      }
+    )
+    makeGrid(temps)
   }
 
   /**
