@@ -7,8 +7,6 @@ import com.sksamuel.scrimage.{Image, Pixel}
   */
 object Interaction {
 
-  //type Data = Iterable[(Location, Temperature)]
-
   /**
     * @param tile Tile coordinates
     * @return The latitude and longitude of the top-left corner of the tile, as per http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames

@@ -22,7 +22,7 @@ object Manipulation {
   def average(temperaturess: Iterable[Iterable[(Location, Temperature)]]): GridLocation => Temperature = {
     val temps = temperaturess.flatten.groupBy(_._1).mapValues(
       (data) => {
-        data.map(_._2).sum / data.size
+        mean(data.map(_._2))
       }
     )
     makeGrid(temps)
@@ -33,8 +33,26 @@ object Manipulation {
     * @param normals A grid containing the “normal” temperatures
     * @return A grid containing the deviations compared to the normal temperatures
     */
-  def deviation(temperatures: Iterable[(Location, Temperature)], normals: GridLocation => Temperature): GridLocation => Temperature = {
-    ???
+  def deviation(temperatures: Iterable[(Location, Temperature)],
+                normals: GridLocation => Temperature): GridLocation => Temperature = {
+
+    def result(gridLocation: GridLocation): Temperature = {
+      stdDev(makeGrid(temperatures)(gridLocation), normals(gridLocation))
+    }
+
+    result
+  }
+
+  def mean(temps: Iterable[Temperature]): Temperature = {
+    temps.sum / temps.size
+  }
+
+  def variance(temperature: Temperature, average: Temperature): Temperature = {
+    math.pow(temperature - average, 2)
+  }
+
+  def stdDev(temperature: Temperature, average: Temperature): Temperature = {
+    math.sqrt(variance(temperature, average))
   }
 
 
