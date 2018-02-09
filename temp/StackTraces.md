@@ -1,8 +1,17 @@
 Warnings:
-Checking file Visualization.scala...
-  1. warning at line 67 character 26:
-     Avoid using return
-  2. warning at line 17 character 6:
-     Method is longer than 50 lines
-  3. warning at line 85 character 6:
-     Method is longer than 50 lines
+
+Checking file /grader/repository/courses/capstone/src/main/scala/observatory/Manipulation.scala...
+  
+  `1. warning at line 3 character 24:
+     Avoid using mutable collections.`
+     
+  `2. warning at line 30 character 45:
+     Avoid using mutable collections.`
+     
+Checking file /grader/repository/courses/capstone/src/main/scala/observatory/Visualization.scala...
+
+  `1. warning at line 52 character 26:
+     Avoid using return`
+     
+  `OK` `2. warning at line 70 character 6:
+     Method is longer than 50 lines`

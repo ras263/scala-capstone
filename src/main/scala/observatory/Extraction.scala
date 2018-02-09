@@ -64,8 +64,8 @@ object Extraction {
             td(1),
             td(2).toInt,
             td(3).toInt,
-            //(td(4).toDouble - 32) / 1.8 // without rounding
-            math.round(((td(4).toDouble - 32) / 1.8) * 100.0) / 100.0 // with rounding
+            (td(4).toDouble - 32) / 1.8 // without rounding
+            //math.round(((td(4).toDouble - 32) / 1.8) * 100.0) / 100.0 // with rounding
           )
       )
 

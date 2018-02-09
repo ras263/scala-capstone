@@ -1,5 +1,7 @@
 package observatory
 
+import scala.collection.mutable
+
 /**
   * 4th milestone: value-added information
   */
@@ -11,7 +13,22 @@ object Manipulation {
     *         returns the predicted temperature at this location
     */
   def makeGrid(temperatures: Iterable[(Location, Temperature)]): GridLocation => Temperature = {
-    ??? // Add restrictions
+
+    lazy val grid: GridLocation => Temperature =
+      memoize(gl => {
+        // Add restrictions
+        if (gl.lat >= -89 && gl.lat <= 90 && gl.lon >= -180 && gl.lon <= 179) {
+          Visualization.predictTemperature(temperatures, Location(gl.lat, gl.lon))
+        } else {
+          0
+        }
+      })
+
+    grid
+  }
+
+  def memoize[I, O](f: I => O): I => O = new mutable.HashMap[I, O]() {
+    override def apply(key: I) = getOrElseUpdate(key, f(key))
   }
 
   /**
@@ -37,7 +54,9 @@ object Manipulation {
                 normals: GridLocation => Temperature): GridLocation => Temperature = {
 
     def result(gridLocation: GridLocation): Temperature = {
-      stdDev(makeGrid(temperatures)(gridLocation), normals(gridLocation))
+      val temperature = makeGrid(temperatures)(gridLocation)
+      val average = normals(gridLocation)
+      if (temperature - average > 0) stdDev(temperature, average) else -stdDev(temperature, average)
     }
 
     result

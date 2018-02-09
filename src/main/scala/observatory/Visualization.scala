@@ -98,20 +98,6 @@ object Visualization {
       }
     }
 
-    /**
-      * Compute a linear interpolation between two specific color values.
-      * @param y0 Smaller color value.
-      * @param y1 Bigger color value.
-      * @param x0 Smaller temperature.
-      * @param x1 Bigger temperature.
-      * @param x Specific temperature.
-      * @return
-      */
-    def interpolate(y0: Int, y1: Int, x0: Double, x1: Double, x: Double): Double = {
-      y0 * (1 - ((x - x0) / (x1 - x0))) + y1 * ((x - x0) / (x1 - x0))
-      //y0 + ((x - x0) * ((y1 - y0) / (x1 - x0)))
-    }
-
     val filteredPoints =  points.filter(_._1 == value)
     if (filteredPoints.size == 1)
       filteredPoints.toList.head._2
@@ -119,6 +105,20 @@ object Visualization {
       val (colder, warmer) = findTwoClosestFromAscendingOrderedPoints(points,  value)
       interpolateColorIn(colder, warmer, value)
     }
+  }
+
+  /**
+    * Compute a linear interpolation between two specific color values.
+    * @param y0 Smaller color value.
+    * @param y1 Bigger color value.
+    * @param x0 Smaller temperature.
+    * @param x1 Bigger temperature.
+    * @param x Specific temperature.
+    * @return
+    */
+  def interpolate(y0: Int, y1: Int, x0: Double, x1: Double, x: Double): Double = {
+    y0 * (1 - ((x - x0) / (x1 - x0))) + y1 * ((x - x0) / (x1 - x0))
+    //y0 + ((x - x0) * ((y1 - y0) / (x1 - x0)))
   }
 
   /**
