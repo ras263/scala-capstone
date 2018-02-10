@@ -17,9 +17,6 @@ object Manipulation {
     grid
   }
 
-  lazy val grid(temperatures: Iterable[(Location, Temperature)]) =
-    memoize((gl: GridLocation) => Visualization.predictTemperature(temperatures, Location(gl.lat, gl.lon)))
-
   def memoize[I, O](f: I => O): I => O = new mutable.HashMap[I, O]() {
     override def apply(key: I) = getOrElseUpdate(key, f(key))
   }
