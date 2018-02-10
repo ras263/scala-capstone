@@ -13,19 +13,12 @@ object Manipulation {
     *         returns the predicted temperature at this location
     */
   def makeGrid(temperatures: Iterable[(Location, Temperature)]): GridLocation => Temperature = {
-
-    lazy val grid: GridLocation => Temperature =
-      memoize(gl => {
-        // Add restrictions
-        if (gl.lat >= -89 && gl.lat <= 90 && gl.lon >= -180 && gl.lon <= 179) {
-          Visualization.predictTemperature(temperatures, Location(gl.lat, gl.lon))
-        } else {
-          0
-        }
-      })
-
+    lazy val grid = memoize((gl: GridLocation) => Visualization.predictTemperature(temperatures, Location(gl.lat, gl.lon)))
     grid
   }
+
+  lazy val grid(temperatures: Iterable[(Location, Temperature)]) =
+    memoize((gl: GridLocation) => Visualization.predictTemperature(temperatures, Location(gl.lat, gl.lon)))
 
   def memoize[I, O](f: I => O): I => O = new mutable.HashMap[I, O]() {
     override def apply(key: I) = getOrElseUpdate(key, f(key))

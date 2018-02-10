@@ -76,13 +76,13 @@
         Incorrect computed color at Location(85.05112877980659,-180.0): Color(0,0,255). Expected to be closer to Color(255,0,0) than Color(0,0,255)
     [Lost Points] 5
     
-    [Test Description] [#3 - Interactive visualization] tile must be consistent across zoom levels
+    |OK|  [Test Description] [#3 - Interactive visualization] tile must be consistent across zoom levels
     [Observed Error] 30.479501308256342 was not less than 30
     [Lost Points] 3
     
 ### Fourth milestone
 
-    [Test Description] [#4 - Data manipulation] makeGrid must return a grid whose predicted temperatures are consistent with the known temperatures
+    |OK|  [Test Description] [#4 - Data manipulation] makeGrid must return a grid whose predicted temperatures are consistent with the known temperatures
     [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
      (ManipulationTest.scala:22)
       Falsified after 0 successful property evaluations.
@@ -93,8 +93,8 @@
       Label of failing property:
         Invalid predicted temperature at (53, -97): 4.999999999999999. Expected to be between 5.0 and 30.0.
     [Lost Points] 5
-
-    [Test Description] [#4 - Data manipulation] average must return a grid whose predicted temperatures are the average of the known temperatures
+---
+    |OLD|  [Test Description] [#4 - Data manipulation] average must return a grid whose predicted temperatures are the average of the known temperatures
     [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
      (ManipulationTest.scala:50)
       Falsified after 0 successful property evaluations.
@@ -105,8 +105,20 @@
       Label of failing property:
         Invalid predicted temperature at (89, -179): 11.98760988259295. Expected: 12.000014736891659.
     [Lost Points] 4
-    
-    [Test Description] [#4 - Data manipulation] deviation must return a grid whose predicted temperatures are the deviations of the known temperatures compared to the normals
+---
+    [Test Description] [#4 - Data manipulation] average must return a grid whose predicted temperatures are the average of the known temperatures
+    [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
+     (ManipulationTest.scala:50)
+      Falsified after 0 successful property evaluations.
+      Location: (ManipulationTest.scala:50)
+      Occurred when passed generated values (
+        arg0 = false
+      )
+      Label of failing property:
+        Invalid predicted temperature at (89, -179): 12.198666334011161. Expected: 12.199317479472732.
+    [Lost Points] 4
+---
+    |OK|  [Test Description] [#4 - Data manipulation] deviation must return a grid whose predicted temperatures are the deviations of the known temperatures compared to the normals
     [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
      (ManipulationTest.scala:71)
       Falsified after 0 successful property evaluations.

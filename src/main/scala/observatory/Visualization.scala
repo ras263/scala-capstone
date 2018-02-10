@@ -17,7 +17,7 @@ object Visualization {
   def predictTemperature(temperatures: Iterable[(Location, Temperature)], location: Location): Temperature = {
     import math.{sin, cos, toRadians}
     /** Power parameter. May been equals 2 or bigger. */
-    val p = 16
+    val p = 2
     val earthRadius = 6371
 
     def distance(from: Location, to: Location): Double = {
