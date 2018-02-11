@@ -106,7 +106,7 @@
         Invalid predicted temperature at (89, -179): 11.98760988259295. Expected: 12.000014736891659.
     [Lost Points] 4
 ---
-    [Test Description] [#4 - Data manipulation] average must return a grid whose predicted temperatures are the average of the known temperatures
+    |OK|  [Test Description] [#4 - Data manipulation] average must return a grid whose predicted temperatures are the average of the known temperatures
     [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
      (ManipulationTest.scala:50)
       Falsified after 0 successful property evaluations.
