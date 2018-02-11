@@ -37,14 +37,11 @@ object Manipulation {
     */
   def deviation(temperatures: Iterable[(Location, Temperature)],
                 normals: GridLocation => Temperature): GridLocation => Temperature = {
-
-    def result(gridLocation: GridLocation): Temperature = {
+    (gridLocation: GridLocation) => {
       val temperature = makeGrid(temperatures)(gridLocation)
       val average = normals(gridLocation)
       if (temperature - average > 0) stdDev(temperature, average) else -stdDev(temperature, average)
     }
-
-    result
   }
 
   def mean(temps: Iterable[Temperature]): Temperature = {
