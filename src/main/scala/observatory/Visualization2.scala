@@ -23,7 +23,20 @@ object Visualization2 {
     d10: Temperature,
     d11: Temperature
   ): Temperature = {
-    ???
+    val a = linearInterpolation(d00, d10, point.x)
+    val b = linearInterpolation(d01, d11, point.x)
+    linearInterpolation(a, b, point.y)
+  }
+
+  /**
+    * Compute a linear interpolation between two specific color values.
+    * @param y0 Smaller temperature.
+    * @param y1 Bigger temperature.
+    * @param x Specific coordinate.
+    * @return
+    */
+  def linearInterpolation(y0: Double, y1: Double, x: Double): Double = {
+    y0 * (1 - ((x - 0) / (1 - 0))) + y1 * ((x - 0) / (1 - 0))
   }
 
   /**
