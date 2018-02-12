@@ -1,10 +1,8 @@
 package observatory
 
-import com.sksamuel.scrimage.{Image, Pixel}
+import com.sksamuel.scrimage.Image
 import observatory.Interaction.toLocation
-import observatory.Visualization.{interpolateColor, predictTemperature}
-
-import scala.collection.parallel.immutable
+import observatory.Visualization.interpolateColor
 
 /**
   * 5th milestone: value-added information visualization
@@ -60,8 +58,8 @@ object Visualization2 {
 
     val pixels = (0 until width * height).map(
       pos => {
-        val y = (pos % width).toDouble / width + tile.y
-        val x = (pos / height).toDouble / height + tile.x
+        val x = (pos % width).toDouble / width + tile.x
+        val y = (pos / height).toDouble / height + tile.y
         val l = toLocation(x, y, tile.zoom)
 
         val (latLow, latHigh) = (floor(l.lat).toInt, ceil(l.lat).toInt)
@@ -70,10 +68,10 @@ object Visualization2 {
         pos -> interpolateColor(
           colours,
           bilinearInterpolation(
-            CellPoint(x, y),
+            CellPoint(l.lon - lonLow, latHigh - l.lat),
             grid(GridLocation(latHigh, lonLow)),
-            grid(GridLocation(latHigh, lonHigh)),
             grid(GridLocation(latLow, lonLow)),
+            grid(GridLocation(latHigh, lonHigh)),
             grid(GridLocation(latLow, lonHigh))
           )
         ).toPixel(127)
