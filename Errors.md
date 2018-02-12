@@ -130,4 +130,18 @@
         Invalid predicted temperature at GridLocation(90,-180): 4.199980163876894. Expected: -4.199980163876894.
     [Lost Points] 4
     
+### Fifth milestone
+
+    [Test Description] [#5 - Value-added information visualization] grid visualization
+    [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
+     (Visualization2Test.scala:45)
+      Falsified after 0 successful property evaluations.
+      Location: (Visualization2Test.scala:45)
+      Occurred when passed generated values (
+        arg0 = true
+      )
+      Label of failing property:
+        Incorrect computed color at (3, 149): Color(128,0,127). Expected to be closer to Color(0,0,255) than Color(255,0,0)
+    [Lost Points] 5
+    
     

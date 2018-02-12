@@ -1,6 +1,10 @@
 package observatory
 
 import com.sksamuel.scrimage.{Image, Pixel}
+import observatory.Interaction.toLocation
+import observatory.Visualization.{interpolateColor, predictTemperature}
+
+import scala.collection.parallel.immutable
 
 /**
   * 5th milestone: value-added information visualization
@@ -29,7 +33,7 @@ object Visualization2 {
   }
 
   /**
-    * Compute a linear interpolation between two specific color values.
+    * Compute a linear interpolation between two specific temperature values.
     * @param y0 Smaller temperature.
     * @param y1 Bigger temperature.
     * @param x Specific coordinate.
@@ -50,7 +54,33 @@ object Visualization2 {
     colors: Iterable[(Temperature, Color)],
     tile: Tile
   ): Image = {
-    ???
+    import math.{floor, ceil}
+    val width, height = 256
+    val colours = colors.toList.sortWith(_._1 < _._1)
+
+    val pixels = (0 until width * height).map(
+      pos => {
+        val y = (pos % width).toDouble / width + tile.y
+        val x = (pos / height).toDouble / height + tile.x
+        val l = toLocation(x, y, tile.zoom)
+
+        val (latLow, latHigh) = (floor(l.lat).toInt, ceil(l.lat).toInt)
+        val (lonLow, lonHigh) = (floor(l.lon).toInt, ceil(l.lon).toInt)
+
+        pos -> interpolateColor(
+          colours,
+          bilinearInterpolation(
+            CellPoint(x, y),
+            grid(GridLocation(latHigh, lonLow)),
+            grid(GridLocation(latHigh, lonHigh)),
+            grid(GridLocation(latLow, lonLow)),
+            grid(GridLocation(latLow, lonHigh))
+          )
+        ).toPixel(127)
+      }
+    ).toList.sortBy(_._1).map(_._2)
+
+    Image(width, height, pixels.toArray)
   }
 
 }
