@@ -118,7 +118,6 @@ object Visualization {
     */
   def interpolate(y0: Int, y1: Int, x0: Double, x1: Double, x: Double): Double = {
     y0 * (1 - ((x - x0) / (x1 - x0))) + y1 * ((x - x0) / (x1 - x0))
-    //y0 + ((x - x0) * ((y1 - y0) / (x1 - x0)))
   }
 
   /**
@@ -139,10 +138,6 @@ object Visualization {
     val pixelsArray = Array.ofDim[Pixel](rows * columns)
     val colours = colors.toList.sortWith(_._1 < _._1)
 
-    //todo For testing
-    //val temps = temperatures.filter(_._1.lat <= 90 - rows).filter(_._1.lon <= columns - 180)
-    //println(temps)
-
     for {
       i <- 0 until rows
       j <- 0 until columns
@@ -155,9 +150,6 @@ object Visualization {
       /* Create pixel and set it to result array */
       pixelsArray((i * columns) + j) = Pixel.apply(color.red, color.green, color.blue, 127)
 
-      //todo Remove after testing.
-      //if (j == columns - 1) println(s"Row $i completed.")
-      //println(s"Column $j completed.")
     }
     val image = Image(columns, rows, pixelsArray)
     //image.output(new java.io.File("target/some-image.png"))
