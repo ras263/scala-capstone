@@ -132,7 +132,7 @@
     
 ### Fifth milestone
 
-    [Test Description] [#5 - Value-added information visualization] grid visualization
+    |OK|  [Test Description] [#5 - Value-added information visualization] grid visualization
     [Observed Error] GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
      (Visualization2Test.scala:45)
       Falsified after 0 successful property evaluations.
@@ -143,5 +143,11 @@
       Label of failing property:
         Incorrect computed color at (3, 149): Color(128,0,127). Expected to be closer to Color(0,0,255) than Color(255,0,0)
     [Lost Points] 5
+    
+### Sixth milestone
+
+    [Test Description] [#6 - Interactive user interface] yearSelection must never be out of the selected layer bounds
+    [Observed Error] consistentYear() was false
+    [Lost Points] 3
     
     

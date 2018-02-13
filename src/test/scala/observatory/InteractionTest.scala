@@ -9,9 +9,9 @@ trait InteractionTest extends FunSuite with Checkers {
 
   import Interaction.{tileLocation}
 
-  test("tileLocation test") {
+  /*test("tileLocation test") {
     val tile = Tile(0, 0, 1)
     val location = tileLocation(tile)
-  }
+  }*/
 
 }
