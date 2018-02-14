@@ -18,4 +18,15 @@ trait Interaction2Test extends FunSuite with Checkers {
     assert(yearSelection(Signal(availableLayers.head), Signal(2005))() === 2005)
   }
 
+  test("consistentness test") {
+    val slider = Var(1200)
+    val layer = Signal(Interaction2.availableLayers(1))
+
+    val res = Interaction2.yearSelection(layer, slider)
+    assert(res() == 1975)
+
+    slider() = 1999
+    assert(res() == 1999)
+  }
+
 }

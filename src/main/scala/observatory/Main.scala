@@ -41,6 +41,17 @@ object Main extends App {
         }
     }
 
-    firstSecond()
+    def sixth(): Unit = {
+        val slider = Var(1200)
+        val layer = Signal(Interaction2.availableLayers(1))
+
+        val res = Interaction2.yearSelection(layer, slider)
+        assert(res() == 1975, "Fucked up")
+
+        slider() = 1999
+        assert(res() == 1999, "Fucked up too")
+    }
+
+    sixth()
 
 }
